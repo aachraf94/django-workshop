@@ -4,7 +4,7 @@ from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from todo.views import UserViewSet, TaskViewSet, ProjectViewSet, register
+from todo.views import UserViewSet, TaskViewSet, ProjectViewSet, register, login
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename='user')
@@ -18,6 +18,7 @@ urlpatterns = [
     # API endpoints
     path('api/', include(router.urls)),
     path('api/register/', register, name='register'),
+    path('api/login/', login, name='login'),
     
     # JWT authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
