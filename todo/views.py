@@ -3,6 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
+from drf_spectacular.types import OpenApiTypes
 from .models import User, Task, Project
 from .serializers import (
     UserSerializer, 
@@ -12,6 +14,14 @@ from .serializers import (
 )
 
 
+@extend_schema_view(
+    list=extend_schema(description='List all users', tags=['Users']),
+    retrieve=extend_schema(description='Get a specific user', tags=['Users']),
+    create=extend_schema(description='Create a new user', tags=['Users']),
+    update=extend_schema(description='Update a user', tags=['Users']),
+    partial_update=extend_schema(description='Partially update a user', tags=['Users']),
+    destroy=extend_schema(description='Delete a user', tags=['Users']),
+)
 class UserViewSet(viewsets.ModelViewSet):
     """CRUD operations for User"""
     queryset = User.objects.all()
@@ -22,6 +32,14 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
 
 
+@extend_schema_view(
+    list=extend_schema(description='List all tasks', tags=['Tasks']),
+    retrieve=extend_schema(description='Get a specific task', tags=['Tasks']),
+    create=extend_schema(description='Create a new task', tags=['Tasks']),
+    update=extend_schema(description='Update a task', tags=['Tasks']),
+    partial_update=extend_schema(description='Partially update a task', tags=['Tasks']),
+    destroy=extend_schema(description='Delete a task', tags=['Tasks']),
+)
 class TaskViewSet(viewsets.ModelViewSet):
     """CRUD operations for Task"""
     queryset = Task.objects.all()
@@ -32,6 +50,14 @@ class TaskViewSet(viewsets.ModelViewSet):
         serializer.save(created_by=self.request.user)
 
 
+@extend_schema_view(
+    list=extend_schema(description='List all projects', tags=['Projects']),
+    retrieve=extend_schema(description='Get a specific project', tags=['Projects']),
+    create=extend_schema(description='Create a new project', tags=['Projects']),
+    update=extend_schema(description='Update a project', tags=['Projects']),
+    partial_update=extend_schema(description='Partially update a project', tags=['Projects']),
+    destroy=extend_schema(description='Delete a project', tags=['Projects']),
+)
 class ProjectViewSet(viewsets.ModelViewSet):
     """CRUD operations for Project"""
     queryset = Project.objects.all()
@@ -42,6 +68,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
+@extend_schema(
+    request=UserCreateSerializer,
+    responses={201: UserCreateSerializer},
+    description='Register a new user account',
+    tags=['Authentication']
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
